@@ -2,10 +2,11 @@
 example R code for the various NeSI platforms, will eventually turn into a quarto website
 
 ### Bioninformatics
+`bioinformatics.r`
 example script's both slurm and R for running some bioinformatics specific packages and functions based on the R-bundle-bioinformatics modules on Mahuika
 
-https://genomicsaotearoa.github.io/RNA-seq-workshop/
-tests with `limma`, `edgeR` and `DESeq2` which utilies Bioconductor and BiocManager
+From https://genomicsaotearoa.github.io/RNA-seq-workshop/
+tests with `limma`, `edgeR` and `DESeq2` which utilises Bioconductor and BiocManager
 
 ### Geospatial
 as above for Geospatial work which relies heavily on GDAL, proj, sp and other system libraries and R packages
@@ -14,6 +15,8 @@ as above for Geospatial work which relies heavily on GDAL, proj, sp and other sy
 R packages key for doing installation from non CRAN spaces, specifically github
 
 ### ggplot
+`plotting.r`
+
 test code for plotting, making sure RStudio/RStudio Server drivers are compatible with `cairo` ie all the module above.
 
 ### Markdown

@@ -1,4 +1,7 @@
-#Presence of Biomanager implies other packages and code will work
+# what libraries is R seeing
+.libPaths()
+
+# Presence of Biomanager implies other packages and code will work
 BiocManager::version()
 
 # load libraries

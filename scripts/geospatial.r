@@ -1,4 +1,5 @@
-# geospatial work with terra
+# geospatial work with terra and raster
+library(raster)
 library(terra)
 
 # Create a SpatRaster 'a' with values
@@ -14,3 +15,8 @@ w <- project(a, b)
 
 plot(w)
 
+# test .tiff loading and raster
+fl_terra <- terra::rast('data/example.tiff')
+fl_raster <- raster::raster('data/example.tiff')
+
+plot(fl_terra)

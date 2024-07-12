@@ -4,6 +4,9 @@ example R code for the various NeSI platforms, will eventually turn into a quart
 ### Bioninformatics
 example script's both slurm and R for running some bioinformatics specific packages and functions based on the R-bundle-bioinformatics modules on Mahuika
 
+https://genomicsaotearoa.github.io/RNA-seq-workshop/
+tests with `limma`, `edgeR` and `DESeq2` which utilies Bioconductor and BiocManager
+
 ### Geospatial
 as above for Geospatial work which relies heavily on GDAL, proj, sp and other system libraries and R packages
 

@@ -1,65 +1,51 @@
-# DESeq2
-# RNA-seq experiment with three samples (A, B, and C) and a count matrix like this:
+#Presence of Biomanager implies other packages and code will work
+BiocManager::version()
 
-# Example count matrix
-count_matrix <- data.frame(
-  Gene = c("Gene1", "Gene2", "Gene3"),
-  A = c(10, 5, 30),
-  B = c(15, 8, 40),
-  C = c(20, 12, 35)
-)
+# load libraries
+#library(DESeq2)
+library(dplyr)
 
-# Create metadata (sample information)
-metadata <- data.frame(
-  Sample = c("A", "B", "C"),
-  Condition = c("Treatment", "Control", "Treatment")
-)
+# read data
+fcData <- read.table('data/yeast_counts_all_chr.txt', sep='\t', header=TRUE)
+names(fcData)[7:12] = c("WT1", "WT2", "WT3", "MT1", "MT2", "MT3")
+fcData |> head()
 
-# Load your count matrix and metadata into R
-library(DESeq2)
+# basic summary
+counts <- fcData[, 7:12]
+rownames(counts) = fcData$Geneid
+counts |> head()
 
-# Create DESeqDataSet
-dds <- DESeqDataSetFromMatrix(countData = count_matrix, colData = metadata)
-
-# Estimate size factors and dispersions
-dds <- estimateSizeFactors(dds)
-dds <- estimateDispersions(dds)
-
-# Fit model
-dds <- DESeq(dds)
-
-# Extract results
-res <- results(dds)
-print(res)
-
-
-# limma
-# Expression dataset with four samples (X, Y, Z, and W) and an expression matrix like this
-
-# Example expression matrix
-expression_matrix <- data.frame(
-  Gene = c("Gene1", "Gene2", "Gene3"),
-  X = c(8, 6, 20),
-  Y = c(12, 9, 18),
-  Z = c(10, 11, 22),
-  W = c(14, 7, 25)
-)
-
-# Create design matrix (e.g., treatment vs. control)
-design_matrix <- model.matrix(~ Condition, data=metadata)
-
-# Load your expression matrix and design matrix into R
+# Expression Analysis
 library(limma)
+library(edgeR)
+dge = DGEList(counts=counts)
+dge = calcNormFactors(dge)
+logCPM = cpm(dge, log=TRUE, prior.count=3)
 
-# Normalize and filter genes
-normalized_data <- voom(expression_matrix)
+options(width=100)
+head(logCPM, 3)
 
-# Fit linear model
-fit <- lmFit(normalized_data, design=design_matrix)
+## The beeswarm package is great for making jittered dot plots
+library(beeswarm)
 
-# Empirical Bayes moderation
-fit <- eBayes(fit)
+# Specify "conditions" (groups: WT and MT)
+conds = c("WT","WT","WT","MT","MT","MT")
 
-# Extract results
-top_genes <- topTable(fit, coef=1, number=10)
-print(top_genes)
+## Perform t-test for "gene number 6" (because I like that one...)
+t.test(logCPM[6,] ~ conds)
+
+
+# DESeq2
+#Fit DESeq model to identify DE transcripts
+library(DESeq2)
+dds = DESeqDataSetFromMatrix(countData = as.matrix(counts), 
+                             colData = data.frame(conds=factor(conds)), 
+                             design = formula(~conds))
+
+counts(dds) |> head()
+dds = DESeq(dds)
+res = DESeq2::results(dds)
+
+# make a nice table
+knitr::kable(res[1:6,])
+

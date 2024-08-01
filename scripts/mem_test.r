@@ -20,8 +20,6 @@ system.time(
   large_matrix <- create_matrix(1)
 )
 
-large_matrix <- create_matrix(1)
-
 size_in_gb(large_matrix)
 
 # Create matrices of different sizes

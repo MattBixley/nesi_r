@@ -1,9 +1,7 @@
 ### tidymodels bootstramp example to test that multiple cores
-
 library(tidyverse)
 library(tidymodels)
 library(palmerpenguins)
-library(ranger)
 library(doParallel)
 # devtools::install_github("G-Thomson/Manu")
 library(Manu)
@@ -48,7 +46,7 @@ cl <- makeCluster(cores)
 registerDoParallel(cl)
 
 # repeat each test 10 times
-time <- numeric(10)
+time <- numeric()
 for(i in 1:10){
  
   start <- Sys.time()
@@ -71,27 +69,27 @@ for(i in 1:10){
   
   end <- Sys.time()
   time[i] <- end - start
-  return(time)
+
 }
+return(time)
 stopCluster(cl)
 }
 
-
 ### run the fit with different cpus
-### run the fit with different cpus
-cpus_min <- 8
-cpus_max <- 32
+count <- 1
+cpus_min <- 1
+cpus_max <- 8
 steps <- 4
-cores_result <- data.frame(matrix(NA, nrow = steps, ncol = 3))
-names(cores_result) <- c("cores", "time_mean", "time_var" )
+cores_result <- data.frame(matrix(NA, nrow = steps, ncol = 4))
+names(cores_result) <- c("cores", "time_mean", "time_var", "time_sd" )
 
-for (j in seq(cpus_min, cpus_max, length.out = steps)){
-  
-  time <- cores_test(cores = j, boot = 2000)
-  cores_result[j,1] <- j
-  cores_result[j,2] <- round(mean(time),3)
-  cores_result[j,3] <- round(var(time),3)
-  
+for(j in floor(seq(cpus_min, cpus_max, length.out = steps))){
+  time <- cores_test(cores = j, boot = 100)
+  cores_result[count,1] <- j
+  cores_result[count,2] <- round(mean(time),3)
+  cores_result[count,3] <- round(var(time),3)
+  cores_result[count,3] <- round(sd(time),3)
+  count <- count + 1
 }
 
 cores_result
@@ -126,5 +124,4 @@ ggplot(cores_result, aes(x = cores, y = time_mean)) +
 
 #penguin_final$.workflow[[1]] %>%
 #  tidy(exponentiate = TRUE)
-
 

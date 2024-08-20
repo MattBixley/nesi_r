@@ -45,9 +45,9 @@ penguin_wf <- workflow() %>%
 cl <- makeCluster(cores)
 registerDoParallel(cl)
 
-# repeat each test 10 times
+# repeat each test 11 times, drop 1st iteration
 time <- numeric()
-for(i in 1:10){
+for(i in 1:11){
  
   start <- Sys.time()
 
@@ -86,9 +86,9 @@ names(cores_result) <- c("cores", "time_mean", "time_var", "time_sd" )
 for(j in floor(seq(cpus_min, cpus_max, length.out = steps))){
   time <- cores_test(cores = j, boot = 100)
   cores_result[count,1] <- j
-  cores_result[count,2] <- round(mean(time),3)
-  cores_result[count,3] <- round(var(time),3)
-  cores_result[count,3] <- round(sd(time),3)
+  cores_result[count,2] <- round(mean(time[-1]),3)
+  cores_result[count,3] <- round(var(time[-1]),3)
+  cores_result[count,4] <- round(sd(time[-1]),3)
   count <- count + 1
 }
 

@@ -79,13 +79,15 @@ stopCluster(cl)
 
 ### run the fit with different cpus
 ### run the fit with different cpus
+cpus_min <- 8
+cpus_max <- 32
 steps <- 4
 cores_result <- data.frame(matrix(NA, nrow = steps, ncol = 3))
 names(cores_result) <- c("cores", "time_mean", "time_var" )
 
-for (j in seq(1, by = 1, length.out = steps)){
+for (j in seq(cpus_min, cpus_max, length.out = steps)){
   
-  time <- cores_test(cores = j, boot = 200)
+  time <- cores_test(cores = j, boot = 2000)
   cores_result[j,1] <- j
   cores_result[j,2] <- round(mean(time),3)
   cores_result[j,3] <- round(var(time),3)
